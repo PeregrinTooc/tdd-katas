@@ -7,6 +7,10 @@ public class TransitiveDependencies {
         this.dependencies = dependencies;
     }
     public String[] calculateFor(String start) {
-        return new String[]{};
+
+        String[] result = new String[this.dependencies[0].length-1];
+        if(result.length>0)
+            result[0] = this.dependencies[0][1];
+        return result;
     }
 }

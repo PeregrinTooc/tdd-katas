@@ -14,6 +14,12 @@ public class TransitiveDependenciesTests {
         whenTheStartIs("a");
         ThenTheListOfTransitiveDependenciesIs(new String[]{});
     }
+    @Test
+    void singleDependency() {
+        givenTheDependencies(new String[][]{{"a","b"}});
+        whenTheStartIs("a");
+        ThenTheListOfTransitiveDependenciesIs(new String[]{"b"});
+    }
 
     private void ThenTheListOfTransitiveDependenciesIs(String[] expectedTransitiveDependencies) {
         assertArrayEquals(expectedTransitiveDependencies,new TransitiveDependencies(dependencies).calculateFor(start));
