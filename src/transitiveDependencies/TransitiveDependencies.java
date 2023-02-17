@@ -1,3 +1,5 @@
+package transitiveDependencies;
+
 public class TransitiveDependencies {
     private final String[][] dependencies;
 
