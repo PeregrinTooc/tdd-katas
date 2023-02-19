@@ -1,5 +1,9 @@
 package transitiveDependencies;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 public class TransitiveDependencies {
     private final String[][] dependencies;
 
@@ -7,10 +11,15 @@ public class TransitiveDependencies {
         this.dependencies = dependencies;
     }
     public String[] calculateFor(String start) {
-
-        String[] result = new String[this.dependencies[0].length-1];
-        if(result.length>0)
-            result[0] = this.dependencies[0][1];
-        return result;
+        var result = new HashSet<String>();
+        for (var dependency: this.dependencies) {
+            if(dependency[0].equals(start)){
+                for (var i = 1; i<dependency.length; i++) {
+                    result.add(dependency[i]);
+                    result.addAll(List.of(calculateFor(dependency[i])));
+                }
+            }
+        }
+        return result.toArray(new String[0]);
     }
 }
