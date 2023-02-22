@@ -1,0 +1,45 @@
+package wardrobeConfigurator;
+
+public class WardrobeElement implements Comparable<WardrobeElement> {
+
+    private final WardrobeElementRecord theElement;
+
+    WardrobeElement(int length){
+        this.theElement = new WardrobeElementRecord(length);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        WardrobeElement that = (WardrobeElement) o;
+        return theElement.equals(that.theElement);
+    }
+
+    @Override
+    public int hashCode() {
+        return theElement.hashCode();
+    }
+
+    public boolean fits(int length) {
+        return length >= theElement.length();
+    }
+
+    @Override
+    public int compareTo(WardrobeElement that) {
+        if(this.equals(that))
+            return 0;
+        return this.theElement.length()>that.theElement.length ? 1 :-1;
+    }
+
+    public int takeFrom(int length) {
+        return length - theElement.length();
+    }
+
+    public boolean hasLength(int length) {
+        return length == theElement.length();
+    }
+
+
+    private record WardrobeElementRecord (int length){}
+}
