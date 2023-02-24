@@ -64,14 +64,23 @@ public class WardrobeElementCombination implements Comparable<WardrobeElementCom
 
     @Override
     public int compareTo(WardrobeElementCombination that) {
-        this.elements.sort(null);
-        that.elements.sort(null);
         if(this.elements.size() == that.elements.size()){
+            this.elements.sort(null);
+            that.elements.sort(null);
             for (int i = 0; i < elements.size() ; i++) {
-               if(!this.elements.get(i).equals(that.elements.get(i)))
-               return this.elements.get(i).compareTo(that.elements.get(i));
+                if(!this.elements.get(i).equals(that.elements.get(i))) {
+                    return this.elements.get(i).compareTo(that.elements.get(i));
+                }
             }
-        return 0;}
+            return 0;}
         return this.elements.size()-that.elements.size();
+    }
+
+    public int isCheaperThan(WardrobeElementCombination that) {
+        return this.price()-that.price();
+    }
+
+    private Integer price() {
+        return elements.stream().map(wardrobeElement -> wardrobeElement.price()).reduce((n,m) -> n+m);
     }
 }

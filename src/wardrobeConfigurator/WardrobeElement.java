@@ -1,11 +1,19 @@
 package wardrobeConfigurator;
 
+import java.util.Currency;
+
 public class WardrobeElement implements Comparable<WardrobeElement> {
 
     private final WardrobeElementRecord theElement;
+    private final Money cost;
 
+    WardrobeElement(int length, Money cost){
+        this.theElement = new WardrobeElementRecord(length);
+        this.cost = cost;
+    }
     WardrobeElement(int length){
         this.theElement = new WardrobeElementRecord(length);
+        this.cost = new Money(0, Currency.getInstance("EUR"));
     }
 
     @Override
@@ -38,6 +46,9 @@ public class WardrobeElement implements Comparable<WardrobeElement> {
 
     public boolean hasLength(int length) {
         return length == theElement.length();
+    }
+
+    public int price() {
     }
 
 
