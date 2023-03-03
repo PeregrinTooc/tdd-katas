@@ -16,6 +16,22 @@ public class WardrobeElementCombination implements Comparable<WardrobeElementCom
         elements.forEach(wardrobeElement -> {this.elements.add(wardrobeElement);});
     }
 
+    public static Comparator<? super WardrobeElementCombination> byPriceSorter() {
+        return new Comparator<WardrobeElementCombination>() {
+            @Override
+            public int compare(WardrobeElementCombination one, WardrobeElementCombination other) {
+                return one.price()-other.price();
+            }
+        };
+    }
+
+    private int price() {
+       var moneyAccumulator = new MoneyAccumulatorImpl();
+       this.elements.forEach(wardrobeElement -> wardrobeElement.price(moneyAccumulator));
+       return moneyAccumulator.amount();
+
+    }
+
 
     @Override
     public boolean equals(Object o) {
@@ -76,11 +92,19 @@ public class WardrobeElementCombination implements Comparable<WardrobeElementCom
         return this.elements.size()-that.elements.size();
     }
 
-    public int isCheaperThan(WardrobeElementCombination that) {
-        return this.price()-that.price();
-    }
+    private class MoneyAccumulatorImpl implements  MoneyAccumulator{
+        private Money money = null;
+        @Override
+        public void accumulate(Money money) {
+            if(this.money == null){
+                this.money = money;
+            }else{
+                this.money = this.money.add(money);
+            }
+        }
 
-    private Integer price() {
-        return elements.stream().map(wardrobeElement -> wardrobeElement.price()).reduce((n,m) -> n+m);
+        public int amount() {
+            return money == null ? 0 : money.amount();
+        }
     }
 }

@@ -126,12 +126,12 @@ public class Tests {
         givenTheLengthOfTheWallIs(250);
         givenTheAvailableElementsAre(FIFTY,SEVENTYFIVE,HUNDRED,HUNDREDTWENTY);
         whenTheCombinationsAreCalculated();
-        thenOneCombinationIs(HUNDRED,HUNDRED,FIFTY);
-        thenOneCombinationIs(HUNDRED,SEVENTYFIVE,SEVENTYFIVE);
-        thenOneCombinationIs(HUNDRED,FIFTY,FIFTY,FIFTY);
-        thenOneCombinationIs(SEVENTYFIVE,SEVENTYFIVE,FIFTY,FIFTY);
-        thenOneCombinationIs(FIFTY,FIFTY,FIFTY,FIFTY, FIFTY);
-        thenTheCheapestCombinationIs();
+        thenOneCombinationIs(HUNDRED,HUNDRED,FIFTY); //90+90+59 --- 239
+        thenOneCombinationIs(HUNDRED,SEVENTYFIVE,SEVENTYFIVE);//90+62+62 ---214
+        thenOneCombinationIs(HUNDRED,FIFTY,FIFTY,FIFTY); // 90+59+59+59 --- 267
+        thenOneCombinationIs(SEVENTYFIVE,SEVENTYFIVE,FIFTY,FIFTY); // 62+62+59+59 --- 242
+        thenOneCombinationIs(FIFTY,FIFTY,FIFTY,FIFTY, FIFTY); // 59+59+59+59+59 --- 295
+        thenTheCheapestCombinationIs(HUNDRED, SEVENTYFIVE, SEVENTYFIVE);
         assertExpectations();
     }
 

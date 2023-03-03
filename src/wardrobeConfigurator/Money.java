@@ -29,6 +29,14 @@ public class Money implements Comparable<Money> {
         return theMoney.amount()-that.theMoney.amount();
     }
 
+    public Money add(Money money) {
+        return new Money(theMoney.amount+money.theMoney.amount,money.theMoney.currency());
+    }
+
+    public int amount(){
+        return theMoney.amount();
+    }
+
     private record MoneyRecord(int amount, Currency currency) {
     }
 }

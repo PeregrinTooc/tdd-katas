@@ -48,7 +48,8 @@ public class WardrobeElement implements Comparable<WardrobeElement> {
         return length == theElement.length();
     }
 
-    public int price() {
+    public void price(MoneyAccumulator moneyAccumulator) {
+        moneyAccumulator.accumulate(cost);
     }
 
 
