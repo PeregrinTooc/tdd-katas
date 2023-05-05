@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 public class RacingTests {
     @Test
-    void shouldKnowTheElapsedTime{
+    void shouldKnowTheElapsedTime(){
         givenANewRaceWithParticipants();
         WhenTheRaceIsStarted();
         AndTimeHasElapsed(0);
