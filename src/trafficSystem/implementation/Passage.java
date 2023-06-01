@@ -21,7 +21,11 @@ public class Passage implements TrafficNode {
     @Override
     public boolean connectedTo(TrafficNode other) {
         return connections.containsKey(other);
+    }
 
+    @Override
+    public boolean reachedWithVelocity(TrafficNode destination, int velocity) {
+        return connectedTo(destination) && connections.get(destination)<=velocity;
     }
 
     public static class Tests{
@@ -31,8 +35,6 @@ public class Passage implements TrafficNode {
             var otherNode = new Passage();
             anyNode.connectTo(otherNode,0);
             Assertions.assertTrue(otherNode.connectedTo(anyNode));
-
-
         }
     }
 }

@@ -14,8 +14,16 @@ public class TrafficParticpantFactory {
         return result;
     }
 
+    public TrafficParticipant createCar(TrafficNode entry, TrafficNode exit, int startVelocity) {
+        var result = (Car)createCar(entry,exit);
+        result.velocity = startVelocity;
+        return result;
+    }
+
     class Car implements TrafficParticipant {
-        public TrafficNode destination;
+        private TrafficNode destination;
+        private int velocity = 0;
+        private int acceleration = 0;
         private TrafficNode position;
         private Set<Receiver> receivers = new HashSet<Receiver>();
 
@@ -27,10 +35,19 @@ public class TrafficParticpantFactory {
         @Override
         public void tick() {
             if (position.connectedTo(destination)) {
-                receivers.forEach(receiver -> receiver.receive(Message.DESTINATION_REACHED, this));
+                if(position.reachedWithVelocity(destination,velocity)){
+                receivers.forEach(receiver -> receiver.receive(Message.DESTINATION_REACHED, this));}
+                else{
+                    receivers.forEach(receiver -> receiver.receive(Message.EN_ROUTE, this));}
+
             } else {
                 receivers.forEach(receiver -> receiver.receive(Message.NOROUTE, this));
             }
+        }
+
+        @Override
+        public void accelerate(int acceleration) {
+            this.acceleration = acceleration;
         }
     }
 }

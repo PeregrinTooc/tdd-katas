@@ -7,21 +7,27 @@ import trafficSystem.implementation.*;
 
 public class SystemWithOneEntryOneExitOneCar extends AcceptanceTests {
 
-    private TrafficParticipant car;
+    private TrafficParticipant carWithStartVelocityOne;
     private TrafficNode entry;
     private TrafficNode exit;
 
     @Test
     void yieldsNoRouteWhenNodesAreNotConnected() {
         whenIForwardTheSimulation();
-        thenNoRouteMessageFrom(car);
+        thenNoRouteMessageFrom(carWithStartVelocityOne);
     }
 
     @Test
     void reachesDestinationAfterOneTickForDistanceOneAndSpeedOne(){
         entry.connectTo(exit,1);
         whenIForwardTheSimulation();
-        thenDestinationReachedMessageFrom(car);
+        thenDestinationReachedMessageFrom(carWithStartVelocityOne);
+    }
+    @Test
+    void sendsEnRouteMessageAfterOneTickForDistanceTwoAndSpeedOne(){
+        entry.connectTo(exit,2);
+        whenIForwardTheSimulation();
+        thenEnRouteMessageFrom(carWithStartVelocityOne);
     }
 
     @BeforeEach
@@ -29,7 +35,7 @@ public class SystemWithOneEntryOneExitOneCar extends AcceptanceTests {
         entry = new Passage();
         exit = new Passage();
         givenSystemHasNodes(entry, exit);
-        car = factory.createCar(entry, exit);
-        whenIAddParticipants(car);
+        carWithStartVelocityOne = factory.createCar(entry, exit, 1);
+        whenIAddParticipants(carWithStartVelocityOne);
     }
 }

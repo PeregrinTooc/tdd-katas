@@ -7,4 +7,5 @@ public interface TrafficParticipant {
 
     void tick();
 
+    void accelerate(int acceleration);
 }

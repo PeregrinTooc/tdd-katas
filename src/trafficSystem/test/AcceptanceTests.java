@@ -37,6 +37,12 @@ class AcceptanceTests {
         }
     }
 
+    protected void thenEnRouteMessageFrom(TrafficParticipant... participants) {
+        for (var participant : participants) {
+            messageReceiver.assertMessageReceived(Message.EN_ROUTE, participant);
+        }
+    }
+
 
     protected final void whenIForwardTheSimulation() {
         whenIForwardTheSimulation(1);
@@ -64,6 +70,7 @@ class AcceptanceTests {
     private void givenATrafficSystem() {
         trafficSystem = TrafficSystem.create();
     }
+
 
 
 
