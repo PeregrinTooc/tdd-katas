@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Point and Line Drawing</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+<canvas id="drawingCanvas"></canvas><br>
+<button onclick="clearCanvas()">Clear</button>
+
+<script>
+    // Size of the canvas
+    const canvasWidth = 600;
+    const canvasHeight = 400;
+
+    // Array to store the points
+    let points = [];
+    let connectMode = false;
+    let startPoint = null;
+
+    // Get the canvas element and its 2D context
+    const canvas = document.getElementById('drawingCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set the canvas size
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+
+    // Function to draw a point on the canvas
+    function drawPoint(x, y, color) {
+      ctx.beginPath();
+      ctx.arc(x, y, 5, 0, 2 * Math.PI);
+      ctx.fillStyle = color;
+      ctx.fill();
+    }
+
+    // Function to draw a line between two points
+    function drawLine(x1, y1, x2, y2) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.strokeStyle = 'black';
+      ctx.stroke();
+    }
+
+    // Function to redraw the canvas
+    function redraw() {
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw the points
+      points.forEach(point => {
+        const color = point.hovered ? 'red' : 'black';
+        drawPoint(point.x, point.y, color);
+      });
+
+      // Draw the lines
+      points.forEach(point => {
+        if (point.connectedTo) {
+          drawLine(point.x, point.y, point.connectedTo.x, point.connectedTo.y);
+        }
+      });
+    }
+
+    // Event listener for mouse move
+    canvas.addEventListener('mousemove', function(event) {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      // Check if the mouse is hovering over a point
+      points.forEach(point => {
+        const dx = x - point.x;
+        const dy = y - point.y;
+        point.hovered = Math.sqrt(dx * dx + dy * dy) <= 5;
+      });
+
+      // Redraw the canvas with the updated points and lines
+      redraw();
+    });
+
+    // Event listener for mouse click
+    canvas.addEventListener('click', function(event) {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      if (connectMode) {
+        // Check if a point is being clicked in connect mode
+        const clickedPoint = points.find(point => {
+          const dx = x - point.x;
+          const dy = y - point.y;
+          return Math.sqrt(dx * dx + dy * dy) <= 5;
+        });
+
+        // If a point is clicked, connect it to the start point
+        if (clickedPoint && clickedPoint !== startPoint) {
+          startPoint.connectedTo = clickedPoint;
+        }
+
+        // Exit connect mode and reset the start point
+        connectMode = false;
+        startPoint = null;
+
+        // Redraw the canvas with the updated lines
+        redraw();
+      } else {
+        // Add the clicked point to the array
+        points.push({ x, y, hovered: false, connectedTo: null });
+
+        // Redraw the canvas with the updated points
+        redraw();
+      }
+    });
+
+    function clearCanvas() {
+      // Clear the points array
+      points = [];
+
+      // Redraw the canvas to clear it
+      redraw();
+    }
+
+    // Event listener for context menu (right-click)
+    canvas.addEventListener('contextmenu', function(event) {
+      event.preventDefault();
+
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      // Check if the right-click is on a point
+      const clickedPoint = points.find(point => {
+        const dx = x - point.x;
+        const dy = y - point.y;
+        return Math.sqrt(dx * dx + dy * dy) <= 5;
+      });
+
+      if (clickedPoint) {
+        // Create the context menu dropdown
+        const selectElement = document.createElement('select');
+        const deleteOption = document.createElement('option');
+        const connectOption = document.createElement('option');
+        const emptyOption = document.createElement('option');
+
+        deleteOption.text = 'Delete';
+        connectOption.text = 'Connect';
+
+        // Function to delete the point
+        function deletePoint() {
+          const index = points.indexOf(clickedPoint);
+          points.splice(index, 1);
+
+          // Remove any connections to the deleted point
+          points.forEach(point => {
+            if (point.connectedTo === clickedPoint) {
+              point.connectedTo = null;
+            }
+          });
+
+          // Redraw the canvas with the updated points and lines
+          redraw();
+        }
+
+        // Function to enter connect mode
+        function enterConnectMode() {
+          connectMode = true;
+          startPoint = clickedPoint;
+        }
+
+        selectElement.add(emptyOption);
+        selectElement.add(deleteOption);
+        selectElement.add(connectOption);
+        selectElement.onchange = function(e) {
+          if(e.target.value == 'Delete'){
+            deletePoint();
+            document.body.removeChild(selectElement);
+          }
+          if(e.target.value == 'Connect'){
+            enterConnectMode()
+          }
+        };
+
+        // Set the position of the dropdown relative to the canvas
+        selectElement.style.position = 'absolute';
+        selectElement.style.left = event.clientX + 'px';
+        selectElement.style.top = event.clientY + 'px';
+
+        // Append the dropdown to the body
+        document.body.appendChild(selectElement);
+
+        // Event listener to remove the dropdown when clicked outside
+        document.addEventListener('click', function(e) {
+          if (selectElement && !selectElement.contains(e.target) && selectElement !== e.target ) {
+            document.body.removeChild(selectElement);
+          }
+        });
+      }
+    });
+
+    // Initialize the canvas
+    redraw();
+  </script>
+</body>
+</html>
