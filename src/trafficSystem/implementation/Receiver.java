@@ -1,7 +1,6 @@
 package trafficSystem.implementation;
 
-import trafficSystem.implementation.Message;
-import trafficSystem.TrafficParticipant;
+import trafficSystem.api.TrafficParticipant;
 
 public interface Receiver {
     void receive(Message message, TrafficParticipant sender);

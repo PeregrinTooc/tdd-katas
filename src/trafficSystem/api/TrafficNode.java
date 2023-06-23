@@ -1,4 +1,4 @@
-package trafficSystem;
+package trafficSystem.api;
 
 public interface TrafficNode {
     void connectTo(TrafficNode other, int distance);
@@ -7,4 +7,5 @@ public interface TrafficNode {
 
     boolean reachedWithVelocity(TrafficNode destination, int velocity);
 
+    TrafficNode addNodeOnRoute(TrafficNode destination, int velocity);
 }

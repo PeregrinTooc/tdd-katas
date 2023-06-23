@@ -4,6 +4,7 @@ abstract public class Message {
     public static final Message NOROUTE = new MessageImpl("No Route");
     public static final Message DESTINATION_REACHED = new MessageImpl("Destination Reached");
     public static final Message EN_ROUTE = new MessageImpl("En Route");
+    public static final Message DESTINATION_BLOCKED = new MessageImpl("Destination Blocked");
 
     private static class MessageImpl extends Message {
         private final String message;

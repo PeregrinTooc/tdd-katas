@@ -1,4 +1,4 @@
-package trafficSystem;
+package trafficSystem.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,6 +13,11 @@ public class TrafficSystem {
 
     public void add(TrafficParticipant... trafficParticipants) {
         this.trafficParticipants.addAll(Arrays.stream(trafficParticipants).toList());
+        this.trafficParticipants.forEach(trafficParticipant -> {
+            for (TrafficParticipant participant : trafficParticipants) {
+                trafficParticipant.broadcastTo(participant);
+            }
+        });
     }
 
     public void tick() {

@@ -1,7 +1,10 @@
 package trafficSystem.test;
 
 import org.junit.jupiter.api.*;
-import trafficSystem.*;
+import trafficSystem.api.TrafficNode;
+import trafficSystem.api.TrafficParticipant;
+import trafficSystem.api.TrafficParticpantFactory;
+import trafficSystem.api.TrafficSystem;
 import trafficSystem.implementation.Message;
 import trafficSystem.implementation.Receiver;
 
@@ -14,7 +17,8 @@ class AcceptanceTests {
 
     private TrafficSystem trafficSystem;
     private TrafficNode[] nodes;
-    protected final TrafficParticpantFactory factory = new TrafficParticpantFactory();;
+    protected final TrafficParticpantFactory factory = new TrafficParticpantFactory();
+    ;
     private MessageReceiver messageReceiver;
 
     @BeforeEach
@@ -24,22 +28,25 @@ class AcceptanceTests {
     }
 
 
-
     protected final void thenNoRouteMessageFrom(TrafficParticipant... participants) {
-        for (var participant : participants) {
-            messageReceiver.assertMessageReceived(Message.NOROUTE, participant);
-        }
+        assertMessageReceived(Message.NOROUTE, participants);
     }
-
+    
     protected void thenDestinationReachedMessageFrom(TrafficParticipant... participants) {
-        for (var participant : participants) {
-            messageReceiver.assertMessageReceived(Message.DESTINATION_REACHED, participant);
-        }
+        assertMessageReceived(Message.DESTINATION_REACHED, participants);
     }
 
     protected void thenEnRouteMessageFrom(TrafficParticipant... participants) {
+        assertMessageReceived(Message.EN_ROUTE, participants);
+    }
+
+    protected void thenDestinationBlockedMessageFrom(TrafficParticipant... participants) {
+        assertMessageReceived(Message.DESTINATION_BLOCKED, participants);
+    }
+
+    private void assertMessageReceived(Message message, TrafficParticipant[] participants) {
         for (var participant : participants) {
-            messageReceiver.assertMessageReceived(Message.EN_ROUTE, participant);
+            messageReceiver.assertMessageReceived(message, participant);
         }
     }
 
@@ -72,19 +79,17 @@ class AcceptanceTests {
     }
 
 
-
-
     private class MessageReceiver implements Receiver {
 
-        private Map<TrafficParticipant,Message> messages = new HashMap<TrafficParticipant,Message>();
+        private Map<TrafficParticipant, Message> messages = new HashMap<TrafficParticipant, Message>();
 
         public void assertMessageReceived(Message message, TrafficParticipant messageSource) {
-            assertEquals(message,messages.get(messageSource));
+            assertEquals(message, messages.get(messageSource));
         }
 
         @Override
         public void receive(Message message, TrafficParticipant sender) {
-            messages.put(sender,message);
+            messages.put(sender, message);
         }
     }
 }
